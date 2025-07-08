@@ -144,7 +144,7 @@ func (ctrl *ProductController) DeleteMany(c *gin.Context) {
 		c.JSON(http.StatusBadGateway, gin.H{"err": err.Error()})
 		return
 	} else {
-		c.JSON(http.StatusOK, gin.H{"data": true})
+		c.JSON(http.StatusOK, gin.H{"message": "xoa san pham thanh cong"})
 		return
 	}
 

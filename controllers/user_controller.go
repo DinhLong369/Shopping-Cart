@@ -17,7 +17,7 @@ func NewUserController(service services.UserService) *UserController {
 }
 
 func (ctrl *UserController) SignUp(c *gin.Context) {
-	var input models.User
+	var input models.RequestSignUp
 	if err := c.ShouldBind(&input); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error": err.Error(),

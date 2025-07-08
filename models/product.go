@@ -7,7 +7,7 @@ type Product struct {
 	Price       float64    `json:"price" gorm:"type:double;not null;default:0"`
 	Quantity    uint       `json:"quantity" gorm:"type:uint;not null;default:0"`
 	ImageURL    string     `json:"image_url" gorm:"type:varchar(512)"`
-	CartItems   []CartItem `gorm:"foreignKey:ProductID"`
+	CartItems   []CartItem `json:"-" gorm:"foreignKey:ProductID"`
 }
 
 type CreateProduct struct {

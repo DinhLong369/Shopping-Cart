@@ -8,7 +8,7 @@ import (
 
 type UserRepo interface {
 	CheckEmail(email string) (*models.User, error)
-	SignUp(input *models.User) error
+	SignUp(input *models.RequestSignUp) error
 }
 
 type userRepo struct {
@@ -25,6 +25,6 @@ func (r *userRepo) CheckEmail(email string) (*models.User, error) {
 	return &user, err
 }
 
-func (r *userRepo) SignUp(input *models.User) error {
-	return r.db.Create(input).Error
+func (r *userRepo) SignUp(input *models.RequestSignUp) error {
+	return r.db.Table("users").Create(input).Error
 }
