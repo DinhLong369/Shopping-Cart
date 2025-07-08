@@ -25,7 +25,7 @@ func (ctrl *CartController) AddToCart(c *gin.Context) {
 	}
 	userID := idUser.(uint)
 	var input models.Request
-	if err := c.ShouldBind(&input); err != nil || input.Quantity == 0 {
+	if err := c.ShouldBind(&input); err != nil {
 		c.JSON(http.StatusBadGateway, gin.H{"err": err.Error()})
 		return
 	}
