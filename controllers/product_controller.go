@@ -28,15 +28,17 @@ func (ctrl *ProductController) CreateProduct(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error": err.Error(),
 		})
+		return
 	}
 	err := ctrl.service.CreateProduct(&input)
 	if err != nil {
 		c.JSON(http.StatusBadGateway, gin.H{
 			"error": err.Error(),
 		})
-	}
-	if err == nil {
+		return
+	} else {
 		c.JSON(http.StatusCreated, gin.H{"message": "tao san pham thanh cong"})
+		return
 	}
 }
 
@@ -51,8 +53,11 @@ func (ctrl *ProductController) GetByID(c *gin.Context) {
 	result, err := ctrl.service.GetByID(id)
 	if err != nil {
 		c.JSON(http.StatusBadGateway, gin.H{"err": err.Error()})
+		return
+	} else {
+		c.JSON(http.StatusOK, gin.H{"data": result})
+		return
 	}
-	c.JSON(http.StatusOK, gin.H{"data": result})
 }
 
 func (ctrl *ProductController) UpdateProduct(c *gin.Context) {
@@ -67,15 +72,17 @@ func (ctrl *ProductController) UpdateProduct(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"err": err.Error(),
 		})
+		return
 	}
 	err := ctrl.service.UpdateProduct(id, &update)
 	if err != nil {
 		c.JSON(http.StatusBadGateway, gin.H{
 			"error": err.Error(),
 		})
-	}
-	if err == nil {
+		return
+	} else {
 		c.JSON(http.StatusOK, gin.H{"message": "cap nhat san pham thanh cong"})
+		return
 	}
 }
 
@@ -91,9 +98,10 @@ func (ctrl *ProductController) DeleteProduct(c *gin.Context) {
 		c.JSON(http.StatusBadGateway, gin.H{
 			"error": err.Error(),
 		})
-	}
-	if err == nil {
+		return
+	} else {
 		c.JSON(http.StatusOK, gin.H{"message": "xoa san pham thanh cong"})
+		return
 	}
 }
 
@@ -110,12 +118,13 @@ func (ctrl *ProductController) ListProduct(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"err": err.Error(),
 		})
-	}
-	if err == nil {
+		return
+	} else {
 		c.JSON(http.StatusOK, gin.H{
 			"data":  items,
 			"total": total,
 		})
+		return
 	}
 }
 
@@ -134,7 +143,9 @@ func (ctrl *ProductController) DeleteMany(c *gin.Context) {
 	if err != nil {
 		c.JSON(http.StatusBadGateway, gin.H{"err": err.Error()})
 		return
+	} else {
+		c.JSON(http.StatusOK, gin.H{"data": true})
+		return
 	}
-	c.JSON(http.StatusOK, gin.H{"data": true})
 
 }

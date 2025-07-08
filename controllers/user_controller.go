@@ -29,9 +29,10 @@ func (ctrl *UserController) SignUp(c *gin.Context) {
 		c.JSON(http.StatusBadGateway, gin.H{
 			"error": err.Error(),
 		})
-	}
-	if err == nil {
+		return
+	} else {
 		c.JSON(http.StatusCreated, gin.H{"message": "Dang ky thanh cong"})
+		return
 	}
 }
 
@@ -48,8 +49,9 @@ func (ctrl *UserController) Login(c *gin.Context) {
 		c.JSON(http.StatusBadGateway, gin.H{
 			"error": err.Error(),
 		})
-	}
-	if err == nil {
+		return
+	} else {
 		c.JSON(http.StatusOK, gin.H{"message": "Dang nhap thanh cong", "token": token})
+		return
 	}
 }

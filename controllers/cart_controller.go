@@ -27,11 +27,14 @@ func (ctrl *CartController) AddToCart(c *gin.Context) {
 	var input models.Request
 	if err := c.ShouldBind(&input); err != nil || input.Quantity == 0 {
 		c.JSON(http.StatusBadGateway, gin.H{"err": err.Error()})
+		return
 	}
 	if err := ctrl.service.AddToCart(userID, input.ProductID, input.Quantity); err != nil {
 		c.JSON(http.StatusBadGateway, gin.H{"err": err.Error()})
+		return
 	} else {
 		c.JSON(http.StatusCreated, gin.H{"message": "da them vao gio hang thanh cong"})
+		return
 	}
 }
 
@@ -47,11 +50,12 @@ func (ctrl *CartController) ListCart(c *gin.Context) {
 	list_cart, err := ctrl.service.ListItems(userID, page, limit)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"err": err.Error()})
-	}
-	if err == nil {
+		return
+	} else {
 		c.JSON(http.StatusOK, gin.H{
 			"list_cart": list_cart,
 		})
+		return
 	}
 }
 
@@ -66,11 +70,15 @@ func (ctrl *CartController) UpdateCart(c *gin.Context) {
 	var input models.CartItem
 	if err := c.ShouldBind(&input); err != nil {
 		c.JSON(http.StatusBadGateway, gin.H{"err": err.Error()})
+		return
 	}
 	if err := ctrl.service.UpdateCartItem(uint(productID), userID, input.Quantity); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"err": err.Error()})
+		return
+	} else {
+		c.JSON(http.StatusOK, gin.H{"message": "cap nhat gio hang thanh cong"})
+		return
 	}
-	c.JSON(http.StatusOK, gin.H{"message": "cap nhat gio hang thanh cong"})
 }
 
 func (ctrl *CartController) DeleteItem(c *gin.Context) {
@@ -83,8 +91,10 @@ func (ctrl *CartController) DeleteItem(c *gin.Context) {
 	if err := ctrl.service.DeleteItem(uint(productID)); err != nil {
 		c.JSON(http.StatusBadGateway, gin.H{"err": err.Error()})
 		return
+	} else {
+		c.JSON(http.StatusOK, gin.H{"message": "xoa san pham trong gio hang thanh cong"})
+		return
 	}
-	c.JSON(http.StatusOK, gin.H{"message": "xoa san pham trong gio hang thanh cong"})
 }
 
 func (ctrl *CartController) DeleteMany(c *gin.Context) {
@@ -102,8 +112,9 @@ func (ctrl *CartController) DeleteMany(c *gin.Context) {
 	err := ctrl.service.DeleteMany(input.IdsProduct)
 	if err != nil {
 		c.JSON(http.StatusBadGateway, gin.H{"err": err.Error()})
-	}
-	if err == nil {
+		return
+	} else {
 		c.JSON(http.StatusOK, gin.H{"message": "xoa san pham trong gio hang thanh cong"})
+		return
 	}
 }

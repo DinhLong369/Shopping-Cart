@@ -3,8 +3,6 @@ package services
 import (
 	"Shopping-cart/models"
 	"Shopping-cart/repositories"
-
-	"github.com/sirupsen/logrus"
 )
 
 type CartService interface {
@@ -66,7 +64,6 @@ func (s *cartService) UpdateCartItem(productID, userID, quantity uint) error {
 	if err != nil {
 		return err
 	}
-	logrus.Println("==================", product)
 	existItem, err := s.repo.GetCartItem(userID, productID)
 	if err != nil {
 		return err
