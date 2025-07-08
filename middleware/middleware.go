@@ -11,7 +11,6 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-// JWTAuthMiddleware kiểm tra token trong Authorization header
 func JWTAuthMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		authHeader := c.GetHeader("Authorization")
@@ -68,18 +67,3 @@ func JWTAuthMiddleware() gin.HandlerFunc {
 		c.Next()
 	}
 }
-
-// 1️⃣ Request gửi đến server → middleware JWT được Gin tự động gọi.
-// 2️⃣ Middleware lấy header Authorization.
-// 3️⃣ Middleware parse + verify token:
-
-// Nếu token hợp lệ → gán userID vào context → request được cho đi tiếp (gọi c.Next()).
-
-// Nếu token không hợp lệ → trả lỗi 401 Unauthorized → không cho request đi tiếp (gọi c.Abort()).
-// 4️⃣ Controller hoặc middleware tiếp theo sẽ lấy userID từ context nếu cần.
-
-// Client gửi request --> Middleware kiểm tra token:
-//     |
-//     +-- Token hợp lệ --> cho đi tiếp --> Controller xử lý --> Response OK
-//     |
-//     +-- Token không hợp lệ --> Response 401 Unauthorized

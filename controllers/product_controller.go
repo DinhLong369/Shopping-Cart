@@ -121,8 +121,8 @@ func (ctrl *ProductController) ListProduct(c *gin.Context) {
 		return
 	} else {
 		c.JSON(http.StatusOK, gin.H{
-			"data":  items,
-			"total": total,
+			"data":       items,
+			"total_item": total,
 		})
 		return
 	}
