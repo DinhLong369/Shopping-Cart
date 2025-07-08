@@ -7,7 +7,6 @@ import (
 	"strconv"
 
 	"github.com/gin-gonic/gin"
-	"github.com/sirupsen/logrus"
 )
 
 type CartController struct {
@@ -56,6 +55,24 @@ func (ctrl *CartController) ListCart(c *gin.Context) {
 	}
 }
 
+func (ctrl *CartController) UpdateCart(c *gin.Context) {
+	idUser, exist := c.Get("userID")
+	if !exist {
+		c.JSON(http.StatusBadGateway, gin.H{"err": "Unauthorized"})
+		return
+	}
+	userID := idUser.(uint)
+	productID, _ := strconv.Atoi(c.Param("product_id"))
+	var input models.CartItem
+	if err := c.ShouldBind(&input); err != nil {
+		c.JSON(http.StatusBadGateway, gin.H{"err": err.Error()})
+	}
+	if err := ctrl.service.UpdateCartItem(uint(productID), userID, input.Quantity); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"err": err.Error()})
+	}
+	c.JSON(http.StatusOK, gin.H{"message": "cap nhat gio hang thanh cong"})
+}
+
 func (ctrl *CartController) DeleteItem(c *gin.Context) {
 	_, exist := c.Get("userID")
 	if !exist {
@@ -72,18 +89,16 @@ func (ctrl *CartController) DeleteItem(c *gin.Context) {
 
 func (ctrl *CartController) DeleteMany(c *gin.Context) {
 	_, exist := c.Get("userID")
-	logrus.Println("============================")
+
 	if !exist {
 		c.JSON(http.StatusBadGateway, gin.H{"err": "Unauthorized"})
 		return
 	}
-
 	var input models.IdsProduct
 	if err := c.ShouldBind(&input); err != nil {
 		c.JSON(http.StatusBadGateway, gin.H{"err": err.Error()})
 		return
 	}
-	logrus.Println("===============lay gia tri IDS:", input.IdsProduct)
 	err := ctrl.service.DeleteMany(input.IdsProduct)
 	if err != nil {
 		c.JSON(http.StatusBadGateway, gin.H{"err": err.Error()})

@@ -3,6 +3,8 @@ package services
 import (
 	"Shopping-cart/models"
 	"Shopping-cart/repositories"
+
+	"github.com/sirupsen/logrus"
 )
 
 type CartService interface {
@@ -10,6 +12,7 @@ type CartService interface {
 	ListItems(userID uint, page int, limit int) (*models.ListCart, error)
 	DeleteItem(productID uint) error
 	DeleteMany(IdsProduct []uint) error
+	UpdateCartItem(productID, userID, quantity uint) error
 }
 
 type cartService struct {
@@ -55,4 +58,23 @@ func (s *cartService) DeleteItem(productID uint) error {
 
 func (s *cartService) DeleteMany(IdsProduct []uint) error {
 	return s.repo.DeleteMany(IdsProduct)
+}
+
+func (s *cartService) UpdateCartItem(productID, userID, quantity uint) error {
+	var product models.Product
+	err := s.repo.GetProduct(productID, &product)
+	if err != nil {
+		return err
+	}
+	logrus.Println("==================", product)
+	existItem, err := s.repo.GetCartItem(userID, productID)
+	if err != nil {
+		return err
+	}
+
+	if existItem != nil {
+		existItem.Quantity = quantity
+		existItem.Price = product.Price * float64(existItem.Quantity)
+	}
+	return s.repo.UpdateCartItem(existItem)
 }

@@ -43,6 +43,7 @@ func SetupRoute(router *gin.RouterGroup) {
 	{
 		cart.POST("/add", ctrlCart.AddToCart)
 		cart.GET("/list", ctrlCart.ListCart)
+		cart.PATCH("/update/:product_id", ctrlCart.UpdateCart)
 		cart.DELETE("/delete/:product_id", ctrlCart.DeleteItem)
 		cart.DELETE("/delete/many", ctrlCart.DeleteMany)
 	}
